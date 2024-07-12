@@ -1,6 +1,63 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+class Account
+{
+protected:
+    string accountNumber;
+    string ownerName;
+    double balance;
+
+public:
+    Account(string accountNumber, string ownerName, double balance)
+    {
+        this->accountNumber = accountNumber;
+        this->ownerName = ownerName;
+        this->balance = balance;
+    }
+
+    virtual void deposit(double amount)
+    {
+        balance += amount;
+    }
+
+    virtual void withdraw(double amount)
+    {
+        if (amount <= balance)
+        {
+            balance -= amount;
+            cout << "Now your remaining balnace is: ";
+            cout << balance << endl;
+        }
+        else
+        {
+            cout << "Insufficient balance." << endl;
+        }
+    }
+
+    virtual double getBalance()
+    {
+        return balance;
+    }
+
+    string getAccountNumber()
+    {
+        return accountNumber;
+    }
+
+    string getOwnerName()
+    {
+        return ownerName;
+    }
+
+    virtual void display()
+    {
+        cout << "Account Number: " << accountNumber << endl;
+        cout << "Owner Name: " << ownerName << endl;
+        cout << "Balance: " << balance << " RS" << endl;
+    }
+};
+
 int main()
 {
     BankingSystem bank;
