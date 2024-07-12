@@ -208,6 +208,7 @@ int main()
         case 1:
             cout << "Enter account type (Savings/Checking): ";
             cin >> accountType;
+            accountType[0] = toupper(accountType[0]);
             cout << "Enter owner name: ";
             cin.ignore();
             getline(cin, ownerName);
