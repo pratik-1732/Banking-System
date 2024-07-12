@@ -58,6 +58,132 @@ public:
     }
 };
 
+// saving account
+
+class SavingsAccount : public Account
+{
+public:
+    SavingsAccount(string accountNumber, string ownerName, double balance)
+        : Account(accountNumber, ownerName, balance) {}
+
+    void display() override
+    {
+        cout << "Savings: ";
+        Account::display();
+    }
+};
+
+// checking account
+
+class CheckingAccount : public Account
+{
+public:
+    CheckingAccount(string accountNumber, string ownerName, double balance)
+        : Account(accountNumber, ownerName, balance) {}
+
+    void display() override
+    {
+        cout << "Checking: ";
+        Account::display();
+    }
+};
+
+// banking system
+
+class BankingSystem
+{
+private:
+    vector<Account *> accounts;
+
+public:
+    void openAccount(string accountType, string accountNumber, string ownerName, double initialDeposit)
+    {
+        Account *account = nullptr;
+
+        if (accountType == "Savings")
+        {
+            account = new SavingsAccount(accountNumber, ownerName, initialDeposit);
+        }
+        else if (accountType == "Checking")
+        {
+            account = new CheckingAccount(accountNumber, ownerName, initialDeposit);
+        }
+
+        if (account)
+        {
+            accounts.push_back(account);
+            cout << accountType << " account opened successfully!" << endl;
+        }
+        else
+        {
+            cout << "Invalid account type." << endl;
+        }
+    }
+
+    void deposit(string accountNumber, double amount)
+    {
+        Account *account = findAccount(accountNumber);
+        if (account)
+        {
+            account->deposit(amount);
+            cout << "Deposit successful." << endl;
+        }
+        else
+        {
+            cout << "Account not found." << endl;
+        }
+    }
+
+    void withdraw(string accountNumber, double amount)
+    {
+        Account *account = findAccount(accountNumber);
+        if (account)
+        {
+            account->withdraw(amount);
+            cout << "Withdrawal successful." << endl;
+        }
+        else
+        {
+            cout << "Account not found." << endl;
+        }
+    }
+
+    void checkBalance(string accountNumber)
+    {
+        Account *account = findAccount(accountNumber);
+        if (account)
+        {
+            cout << "Balance: " << account->getBalance() << " RS" << endl;
+        }
+        else
+        {
+            cout << "Account not found." << endl;
+        }
+    }
+
+    void displayAccounts()
+    {
+        for (auto account : accounts)
+        {
+            account->display();
+            cout << "---------------------------------" << endl;
+        }
+    }
+
+private:
+    Account *findAccount(string accountNumber)
+    {
+        for (auto account : accounts)
+        {
+            if (account->getAccountNumber() == accountNumber)
+            {
+                return account;
+            }
+        }
+        return nullptr;
+    }
+};
+
 int main()
 {
     BankingSystem bank;
