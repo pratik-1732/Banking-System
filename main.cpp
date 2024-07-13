@@ -52,6 +52,7 @@ public:
 
     virtual void display()
     {
+        cout << endl;
         cout << "Account Number: " << accountNumber << endl;
         cout << "Owner Name: " << ownerName << endl;
         cout << "Balance: " << balance << " RS" << endl;
@@ -95,9 +96,34 @@ class BankingSystem
 private:
     vector<Account *> accounts;
 
-public:
-    void openAccount(string accountType, string accountNumber, string ownerName, double initialDeposit)
+    set<string> usedAccountNumbers;
+
+    string generateUniqueAccountNumber()
     {
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<> dis(0, 999999);
+
+        string accountNumber;
+        do
+        {
+            int randomNumber = dis(gen);
+            accountNumber = "BKID" + to_string(randomNumber);
+            while (accountNumber.length() < 10)
+            {
+                accountNumber.insert(4, "0");
+            }
+        } while (usedAccountNumbers.find(accountNumber) != usedAccountNumbers.end());
+
+        usedAccountNumbers.insert(accountNumber);
+        return accountNumber;
+    }
+
+public:
+    void openAccount(string accountType, string ownerName, double initialDeposit)
+    {
+        string accountNumber = generateUniqueAccountNumber();
+
         Account *account = nullptr;
 
         if (accountType == "Savings")
@@ -112,7 +138,7 @@ public:
         if (account)
         {
             accounts.push_back(account);
-            cout << accountType << " account opened successfully!" << endl;
+            cout << accountType << " account opened successfully with Account Number: " << accountNumber << endl;
         }
         else
         {
@@ -165,6 +191,7 @@ public:
     {
         for (auto account : accounts)
         {
+            cout << "---------------------------------" << endl;
             account->display();
             cout << "---------------------------------" << endl;
         }
@@ -213,12 +240,9 @@ int main()
             cin.ignore();
             getline(cin, ownerName);
 
-            cout << "Enter account number: ";
-            cin >> accountNumber;
-
             cout << "Enter initial deposit amount: ";
             cin >> amount;
-            bank.openAccount(accountType, accountNumber, ownerName, amount);
+            bank.openAccount(accountType, ownerName, amount);
             break;
 
         case 2:
